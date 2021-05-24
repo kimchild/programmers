@@ -1,4 +1,4 @@
-package util;
+package util.level1;
 
 import static org.assertj.core.api.Assertions.*;
 
