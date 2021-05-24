@@ -8,11 +8,6 @@ import org.junit.jupiter.api.Test;
 
 public class SortTest {
 
-	public int[] solution(int[] array, int[][] commands) {
-		int[] answer = {};
-		return answer;
-	}
-
 	@Test
 		// @checkstyle:off
 	void K번째수() {
