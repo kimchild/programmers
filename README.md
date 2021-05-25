@@ -21,8 +21,8 @@
                     2. 배열번째의 word값을 Node값으로 생성
                     3. MasterNode 생성
                     4. MasterNode는 값을 가지고 있지 않는다.
-                    5. ChildNode값이 있는지 확인하고 없다면 word의 첫번째 값을 할당
+                    5. ChildNode값이 있는지 확인하고 없다면 0번째 값을 할당
                     6. word의 2번째 값이 ChildNode의 ChildNode에 있는지 확인(모든 Child 확인)
                     7. ChildNode에 값이 있다면 Skip
                     8. ChildNode에 값이 없다면 생성
-                    
+                    9. 완성된 노드 데이터에서 찾는 값을 노드형태로 찾아서 false처리

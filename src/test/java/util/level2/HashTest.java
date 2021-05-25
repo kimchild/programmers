@@ -4,10 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +28,7 @@ public class HashTest {
 		/**/
 
 		/*/
-		String[] phone_book = {"123","456","789"};
+		String[] phone_book = {"123", "456", "789"};
 		boolean resultEqualsValue = true;
 		/**/
 
@@ -50,26 +47,30 @@ public class HashTest {
 		boolean resultEqualsValue = false;
 		/**/
 
+		/*/
+		Arrays.sort(phone_book, (o1, o2) -> {
+			int length = Math.min(o1.length(), o2.length());
+			if("0".equals(o1)) {
+				return -1;
+			}
+			return Integer.compare( Integer.parseInt(o1.substring(0, length)), Integer.parseInt(o2.substring(0, length)) );
+		});
+		list.sort((o1, o2) -> {
+			int length = Math.min(o1.length(), o2.length());
+			if("0".equals(o1)) {
+				return -1;
+			}
+			return Integer.compare( Integer.parseInt(o1.substring(0, length)), Integer.parseInt(o2.substring(0, length)) );
+		});
+		/*정답 100%, 속도 FAIL로직*/
 		List<String> list = new ArrayList<>(Arrays.asList(phone_book));
 
-
-		Map<Character, List<String>> map = new HashMap<>();
-		for (String s : list) {
-
-			char hashCode = s.charAt(0);
-			if (!map.containsKey(hashCode)) {
-				map.put(hashCode, new ArrayList<>());
-			}
-			map.get(hashCode).add(s);
-		}
-
 		for (String s1 : phone_book) {
+			list.sort((o1, o2) -> s1.substring(0,1).equals(o2.substring(0,1)) ? 1 : -1);
 
-			final char findHash = s1.charAt(0);
-			if (map.containsKey(findHash)) {
-
-				for (String entry : map.get(findHash)) {
-					if (entry.startsWith(s1) && !s1.equals(entry)) {
+			if (list.size() > 1 && s1.substring(0,1).equals(list.get(1).substring(0,1))) {
+				for (String s2 : list) {
+					if (s2.startsWith(s1) && !s1.equals(s2)) {
 						answer = false;
 						break;
 					}
@@ -78,9 +79,96 @@ public class HashTest {
 
 			if(!answer) break;
 		}
+		/**/
 
+		/*속도문제 Pass/
+		// Arrays.sort(phone_book);
+		List<String> list = new ArrayList<>(Arrays.asList(phone_book));
+		list.sort((o1, o2) -> s1.substring(0,1).equals(o2.substring(0,1)) ? 1 : -1);
+
+		TrieNode trieNode = new TrieNode();
+		for (String s : list) {
+			trieNode.insert(s);
+		}
+
+		TrieNode node = TrieNode.RootTrieNode;
+
+		for (String s1 : phone_book) {
+			answer = node.containsValue(s1);
+			if(!answer) {
+				break;
+			}
+		}
+		/**/
 
 		assertThat(answer).isEqualTo(resultEqualsValue);
 	}
 
+	private static class TrieNode {
+		private static TrieNode RootTrieNode = new TrieNode();
+		private List<TrieNode> childrenNode = new ArrayList<>();
+		private char c;
+
+		public TrieNode() {
+		}
+
+		public char get() {
+			return c;
+		}
+
+		private void set(char c) {
+			this.c = c;
+		}
+
+		public void insert(String word) {
+			TrieNode trieNode = RootTrieNode;
+			for (int i = 0; i < word.length(); i++) {
+				final char findChar = word.charAt(i);
+				trieNode = trieNode.getChildrenNode(findChar);
+			}
+		}
+
+		private TrieNode getChildrenNode(char c) {
+			for (TrieNode trieNode : this.childrenNode) {
+				if (c == trieNode.get()) {
+					return trieNode;
+				}
+			}
+
+			TrieNode trieNode = new TrieNode();
+			trieNode.set(c);
+			this.childrenNode.add(trieNode);
+			return trieNode;
+		}
+
+		private String getContainsValue(String s1) {
+
+			StringBuilder sb = new StringBuilder();
+			List<TrieNode> childrenNodeList = this.childrenNode;
+			final int length = s1.length();
+			for (int i = 0; i < length; i++) {
+				for (TrieNode trieNode : childrenNodeList) {
+					if (trieNode.get() == s1.charAt(i)) {
+						sb.append(s1.charAt(i));
+						childrenNodeList = trieNode.childrenNode;
+						break;
+					}
+				}
+			}
+
+			for (TrieNode findBody : childrenNodeList) {
+				if (findBody.childrenNode.size() > 0) {
+					sb.append(findBody.get());
+					break;
+				}
+			}
+
+			return sb.toString();
+		}
+
+		public boolean containsValue(String s1) {
+			return this.getContainsValue(s1).length() <= s1.length();
+		}
+
+	}
 }
