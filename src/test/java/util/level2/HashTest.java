@@ -66,17 +66,12 @@ public class HashTest {
 		List<String> list = new ArrayList<>(Arrays.asList(phone_book));
 
 		for (String s1 : phone_book) {
-			list.sort((o1, o2) -> s1.substring(0,1).equals(o2.substring(0,1)) ? 1 : -1);
-
-			if (list.size() > 1 && s1.substring(0,1).equals(list.get(1).substring(0,1))) {
-				for (String s2 : list) {
-					if (s2.startsWith(s1) && !s1.equals(s2)) {
-						answer = false;
-						break;
-					}
+			for (String s2 : list) {
+				if (s2.startsWith(s1) && !s1.equals(s2)) {
+					answer = false;
+					break;
 				}
 			}
-
 			if(!answer) break;
 		}
 		/**/
