@@ -68,42 +68,23 @@ public class SortTest {
 		// 534;
 		// 59;
 
-		//순서를 보장하는 List로 값할당
+		boolean except = true;
 		List<String> list = new ArrayList<>();
 		for (int i : numbers) {
-			list.add(String.valueOf(i));
+		    list.add(String.valueOf(i));
+		    if (i != 0) except = false;
 		}
 
-		// int number = 99999;
-		// for (int i = 1; i < 1000; i++) {
-		// 	list.add(String.valueOf(number--));
-		// }
+		Collections.sort(list, (o1, o2) -> (o1 + o2).compareTo(o2 + o1));
 
-		List<String> sortAddList = new ArrayList<>();
-		this.sort(sortAddList, list.get(0), list);
-
-		StringBuilder answerBuilder = new StringBuilder();
-		for (String s : sortAddList) {
-			answerBuilder.append(s);
+		for (String str : list) {
+		    answer += str;
 		}
 
-		answer = answerBuilder.toString();
+		if (except) answer = "0";
 
 		assertThat(answer).isEqualTo(testEqualsValue);
 	}
 
-	private void sort(List<String> sortAddList, String before, List<String> list) {
-		for (String strNumber : list) {
-			if (Long.parseLong(before + strNumber) < Long.parseLong(strNumber + before)) {
-				before = strNumber;
-			}
-		}
-
-		list.remove(before);
-		sortAddList.add(before);
-		if (list.size() != 0) {
-			this.sort(sortAddList, list.get(0), list);
-		}
-	}
 
 }
